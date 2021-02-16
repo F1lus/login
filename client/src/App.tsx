@@ -1,11 +1,34 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react'
+import {Switch, Route, Redirect} from 'react-router-dom'
 
-function App() {
+import API from './components/BackendAPI'
+import Login from './components/Login'
+
+export default function App() {
+
+  const [loggedIn, setLoggedIn] = useState(false) 
+
+  useEffect(() => {
+
+  })
+
   return (
-    <div>
-      <p>Up and running</p>
-    </div>
-  );
-}
+    <Switch>
+      <Route exact path='/' component={() => {
+        if(loggedIn){
+          return <Redirect to='/home' />
+        }else{
+          return <Login />
+        }
+      }} />
 
-export default App;
+      <Route exact path='/home' component={() => {
+        if(loggedIn){
+          return <div>Hello</div>
+        }else{
+          return <Redirect to='/home' />
+        }
+      }} />
+    </Switch>
+  )
+}

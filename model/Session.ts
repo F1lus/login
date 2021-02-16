@@ -6,7 +6,7 @@ const sessionStore = new mysqlStore({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'logindb_typescript',
+    database: 'login_filimon_istok',
     expiration: 86400000,
     clearExpired: true,
     checkExpirationInterval: 900000

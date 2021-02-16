@@ -1,12 +1,12 @@
 import mysql from 'mysql'
 
-class Connection{
+export default class Connection{
 
     private connection: mysql.Connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
         password: '',
-        database: 'logindb_typescript'
+        database: 'login_filimon_istok'
     })
 
     constructor(){
@@ -17,10 +17,27 @@ class Connection{
         })
     }
 
+    public metaCommands(sql: string){
+        return new Promise((resolve, reject) => {
+            this.connection.query(sql, (error, results) => {
+                if(error){
+                    reject(error)
+                }else{
+                    resolve(results != null)
+                }
+            })
+        })
+    }
+
     private queryBuilder(sql: string, data: any[]){
         return new Promise((resolve, reject) => {
             if(sql.indexOf('INSERT') === -1 || sql.indexOf('UPDATE') === -1 || sql.indexOf('DELETE') === -1){
-                const counter = sql.split('?').length/2
+                let counter = 0
+                sql.split('').forEach(value => {
+                    if(value === '?'){
+                        counter++
+                    }
+                })
                 if(data.length > counter){
                     reject('data_mismatch')
                 }else{
@@ -49,7 +66,6 @@ class Connection{
             }
         })
     }
-
     
     public close() {
         this.connection.end()
