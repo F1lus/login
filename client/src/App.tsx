@@ -3,6 +3,7 @@ import {Switch, Route, Redirect} from 'react-router-dom'
 
 import API from './components/BackendAPI'
 import Login from './components/Login'
+import './components/style/styles.css'
 
 export default function App() {
 
