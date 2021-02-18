@@ -30,30 +30,26 @@ app.use(cors({
 }))
 
 app.use(async (req, res, next) => {
-    try {
-        await createDb().catch(err => console.log(err))
 
-        const sessionStore = await new mysqlStore({
-            host: 'localhost',
-            user: 'root',
-            password: '',
-            database: 'login_filimon_istok',
-            expiration: 86400000,
-            clearExpired: true,
-            checkExpirationInterval: 900000
-        })
+    const sessionStore = await new mysqlStore({
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'login_filimon_istok',
+        expiration: 86400000,
+        clearExpired: true,
+        checkExpirationInterval: 900000
+    })
 
-        const session = expressSession({
-            secret: '#sec_61d$',
-            resave: false,
-            saveUninitialized: false,
-            store: sessionStore
-        })
+    const session = expressSession({
+        secret: '#sec_61d$',
+        resave: false,
+        saveUninitialized: false,
+        store: sessionStore
+    })
 
-        session(req, res, next)
-    } catch (err) {
-        console.log('Ops')
-    }
+    session(req, res, next)
+
 })
 
 app.use(express.json())
@@ -127,7 +123,8 @@ app.post('/logout', (req: express.Request, res: express.Response) => {
 })
 
 //A szerver indítása
-server.listen(5000, () => {
+server.listen(5000, async () => {
+    await createDb()
     console.log('A szerver készen áll!')
 })
 
