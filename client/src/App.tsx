@@ -37,9 +37,9 @@ export default function App() {
       <Route exact path='/home' component={() => {
         if (loggedIn) {
           return (
-            <div>
+            <div className="container text-center">
               <h1>Helló, {user}</h1>
-              <button onClick={(e) => {
+              <button className="btn btn-outline-info" onClick={(e) => {
                 e.preventDefault()
 
                 API.post('/logout')
