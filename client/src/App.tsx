@@ -4,6 +4,7 @@ import {Switch, Route, Redirect} from 'react-router-dom'
 import API from './components/BackendAPI'
 import Login from './components/Login'
 import './components/style/styles.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default function App() {
 
