@@ -13,11 +13,6 @@ export default function App() {
   const [loggedIn, setLoggedIn] = useState(false)
 
   useEffect(() => {
-    API.get('/')
-      .catch(err => console.log(err))
-  }, [])
-
-  useEffect(() => {
     API.get('/login')
       .then(response => {
         setLoggedIn(response.data != null)

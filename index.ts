@@ -2,11 +2,12 @@
 import express from 'express'
 import http from 'http'
 import cors from 'cors'
-import bodyParser from 'body-parser'
+import expressSession from 'express-session'
+
+const mysqlStore = require('express-mysql-session')(expressSession)
 
 //Saját importok
-import session from './model/Session'
-import Connect from './model/Connection'
+import Connect, { createDb } from './model/Connection'
 
 //Előkészítés
 const app: express.Express = express()
@@ -28,15 +29,36 @@ app.use(cors({
     credentials: true
 }))
 
-app.use(session)
+app.use(async (req, res, next) => {
+    try {
+        await createDb().catch(err => console.log(err))
+
+        const sessionStore = await new mysqlStore({
+            host: 'localhost',
+            user: 'root',
+            password: '',
+            database: 'login_filimon_istok',
+            expiration: 86400000,
+            clearExpired: true,
+            checkExpirationInterval: 900000
+        })
+
+        const session = expressSession({
+            secret: '#sec_61d$',
+            resave: false,
+            saveUninitialized: false,
+            store: sessionStore
+        })
+
+        session(req, res, next)
+    } catch (err) {
+        console.log('Ops')
+    }
+})
 
 app.use(express.json())
 
 //Routing
-
-app.get('/', (req: express.Request, res: express.Response) => {
-    new Connect()
-})
 
 app.get('/login', (req: express.Request, res: express.Response) => {
     if (req.session.username) {
@@ -50,10 +72,10 @@ app.post('/login', (req: express.Request, res: express.Response) => {
         connect.queryBuilder('SELECT * FROM users WHERE username = ? LIMIT 1;', req.body.username)
             .then(result => {
                 if (Array.isArray(result) && result.length > 0) {
-                    if(result[0].password === req.body.password){
+                    if (result[0].password === req.body.password) {
                         req.session.username = result[0].username
                         res.json({ access: true })
-                    }else{
+                    } else {
                         res.json({ access: false })
                     }
                 } else {
