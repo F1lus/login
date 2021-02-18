@@ -1,72 +1,51 @@
 import mysql from 'mysql'
 
-export default class Connection{
+export default class Connection {
 
     private connection: mysql.Connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
         password: '',
-        database: 'login_filimon_istok'
+        database: 'login_filimon_istok',
+        multipleStatements: true
     })
 
-    constructor(){
-        this.connection.connect(err => {
-            if(err){
-                console.log(err.stack)
-            }
-        })
-    }
+    private createDb: string = `
+    CREATE DATABASE IF NOT EXISTS login_filimon_istok CHARACTER SET utf8mb4;
 
-    public metaCommands(sql: string){
-        return new Promise((resolve, reject) => {
-            this.connection.query(sql, (error, results) => {
-                if(error){
-                    reject(error)
-                }else{
-                    resolve(results != null)
+    USE login_filimon_istok;
+
+    CREATE TABLE IF NOT EXISTS users (
+        id int NOT NULL AUTO_INCREMENT,
+        username varchar(16) BINARY NOT NULL,
+        password varchar(16) BINARY NOT NULL,
+        PRIMARY KEY (id)
+    );`
+
+    constructor() {
+        this.connection.connect(err => {
+            if (err) {
+                console.log(err)
+            }
+            this.connection.query(this.createDb, (error) => {
+                if (error) {
+                    console.log(error)
                 }
             })
         })
     }
 
-    private queryBuilder(sql: string, data: any[]){
+    public queryBuilder(sql: string, ...data: any[]) {
         return new Promise((resolve, reject) => {
-            if(sql.indexOf('INSERT') === -1 || sql.indexOf('UPDATE') === -1 || sql.indexOf('DELETE') === -1){
-                let counter = 0
-                sql.split('').forEach(value => {
-                    if(value === '?'){
-                        counter++
-                    }
-                })
-                if(data.length > counter){
-                    reject('data_mismatch')
-                }else{
-                    this.connection.query({
-                        sql: sql,
-                        timeout: 30*1000
-                    }, data, (error, results) => {
-                        if(error){
-                            reject(error)
-                        }else{
-                            resolve(results)
-                        }
-                    })
+            this.connection.query(sql, data, (err, result) => {
+                if (err) {
+                    reject(err)
                 }
-            }else{
-                this.connection.query({
-                    sql: sql,
-                    timeout: 30*1000
-                }, data, (error, results) => {
-                    if(error){
-                        reject(error)
-                    }else{
-                        resolve(results)
-                    }
-                })
-            }
+                resolve(result)
+            })
         })
     }
-    
+
     public close() {
         this.connection.end()
     }

@@ -15,11 +15,9 @@ const sessionStore = new mysqlStore({
 const session = expressSession({
     secret: '#sec_61d$',
     resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true },
+    saveUninitialized: false,
     store: sessionStore
 })
 
 export default session
 
- 

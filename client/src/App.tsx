@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react'
-import {Switch, Route, Redirect} from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Switch, Route, Redirect } from 'react-router-dom'
 
 import API from './components/BackendAPI'
 import Login from './components/Login'
@@ -9,31 +9,64 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default function App() {
 
-  const [loggedIn, setLoggedIn] = useState(false) 
+  const [user, setUser] = useState('')
+  const [loggedIn, setLoggedIn] = useState(false)
 
   useEffect(() => {
+    API.get('/')
+      .catch(err => console.log(err))
+  }, [])
 
+  useEffect(() => {
+    API.get('/login')
+      .then(response => {
+        setLoggedIn(response.data != null)
+        if (loggedIn) {
+          setUser(response.data.user)
+        } else {
+          setUser('')
+        }
+      })
   })
 
   return (
     <Switch>
       <Route exact path='/' component={() => {
-        if(loggedIn){
+        if (loggedIn) {
           return <Redirect to='/home' />
-        }else{
+        } else {
           return <Login />
         }
       }} />
 
       <Route exact path='/home' component={() => {
-        if(loggedIn){
-          return <div>Hello</div>
-        }else{
-          return <Redirect to='/home' />
+        if (loggedIn) {
+          return (
+            <div>
+              <h1>Helló, {user}</h1>
+              <button onClick={(e) => {
+                e.preventDefault()
+
+                API.post('/logout')
+                  .then(() => {
+                    window.location.reload()
+                  }).catch(err => console.log(err))
+
+              }}>Kijelentkezés</button>
+            </div>
+          )
+        } else {
+          return <Redirect to='/' />
         }
       }} />
-      
-      <Route exact path='/register' component={Register}/>
+
+      <Route exact path='/register' component={() => {
+        if (loggedIn) {
+          return <Redirect to='/home' />
+        } else {
+          return <Register />
+        }
+      }} />
     </Switch>
   )
 }
