@@ -3,6 +3,7 @@ import {Switch, Route, Redirect} from 'react-router-dom'
 
 import API from './components/BackendAPI'
 import Login from './components/Login'
+import Register from './components/Register'
 import './components/style/styles.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -31,6 +32,8 @@ export default function App() {
           return <Redirect to='/home' />
         }
       }} />
+      
+      <Route exact path='/register' component={Register}/>
     </Switch>
   )
 }
