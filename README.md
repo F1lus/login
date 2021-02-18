@@ -7,4 +7,6 @@
 # A MySQL szerver futtatása elengedhetetlen, adatbázist viszont nem kell hozzá importálni, mert azt a szerver elkészíti magának
 
 # Egy hibaüzenetre számítani lehet a szerver konzoljában, ez azért van, mert a bejelentkezési süti-k az adatbázisban tárolódnak, és első indításnál, mivel friss az adatbázis
-# nem fogja megtalálni magának a tábláját. (Emiatt saját magának létre fogja hozni azt)
+nem fogja megtalálni magának a tábláját. 
+
+# (Emiatt saját magának létre fogja hozni azt)
