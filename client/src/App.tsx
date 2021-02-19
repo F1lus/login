@@ -37,9 +37,16 @@ export default function App() {
       <Route exact path='/home' component={() => {
         if (loggedIn) {
           return (
-            <div className="container text-center">
-              <h1>Helló, {user}</h1>
-              <button className="btn btn-outline-info" onClick={(e) => {
+            <div className="glass container text-center">
+              <h1>Üdvözöljük! <br/> Az Ön e-mail címe: {user}</h1>
+
+              <hr/>
+              
+              <a href='http://www.nyirszikszi.hu/'>
+                <button className="btn btn-outline-info m-5">NYIRSZIKSZI</button>
+              </a>
+
+              <button className="btn btn-outline-info m-5" onClick={(e) => {
                 e.preventDefault()
 
                 API.post('/logout')

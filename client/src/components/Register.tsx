@@ -15,8 +15,8 @@ export default function Register() {
     function handleSubmit(event: React.FormEvent) {
         event.preventDefault()
 
-        if (username.length < 5 || username.length > 16) {
-            setAlert('A felhasználónév hossza legalább 5, legfeljebb 16 karakter legyen!')
+        if (username.indexOf('@') === -1 || username.indexOf('.') === -1 || username.length > 50) {
+            setAlert('Az email cím túl hosszú, vagy nem megfelelő a formátum!')
             return
         } else if (password.length < 8 || password.length > 16) {
             setAlert('A jelszó hossza legalább 8, legfeljebb 16 karakter legyen!')
@@ -31,7 +31,7 @@ export default function Register() {
                 if (response.data.register) {
                     setRegistered(true)
                 } else if (response.data.error) {
-                    setAlert('A felhasználónév már foglalt!')
+                    setAlert('Az email cím már foglalt!')
                 }
             }).catch(err => console.log(err))
 
@@ -62,10 +62,10 @@ export default function Register() {
             {alert ? <div className='alert alert-danger'>{alert}</div> : null}
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <input type="text" name="username" value={username || ''} onChange={handleChange} autoComplete="off" required />
+                    <input type="email" name="username" value={username || ''} onChange={handleChange} autoComplete="off" required />
                     <label htmlFor="username" className="label-name">
                         <span className="content-name">
-                            Felhasználónév
+                            E-mail
                         </span>
                     </label>
                 </div>

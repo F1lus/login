@@ -9,10 +9,17 @@ export function createDb() {
 
             CREATE TABLE IF NOT EXISTS users (
                 id int NOT NULL AUTO_INCREMENT,
-                username varchar(16) BINARY NOT NULL,
+                username varchar(50) BINARY NOT NULL,
                 password varchar(16) BINARY NOT NULL,
                 PRIMARY KEY (id)
-            );`
+            ) ENGINE=InnoDB;
+            
+            CREATE TABLE IF NOT EXISTS sessions (
+                session_id varchar(128) COLLATE utf8mb4_bin NOT NULL,
+                expires int(11) unsigned NOT NULL,
+                data mediumtext COLLATE utf8mb4_bin,
+                PRIMARY KEY (session_id)
+              ) ENGINE=InnoDB;`
         const connection = mysql.createConnection({
             host: 'localhost',
             user: 'root',

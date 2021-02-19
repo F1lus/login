@@ -29,9 +29,9 @@ app.use(cors({
     credentials: true
 }))
 
-app.use(async (req, res, next) => {
+app.use((req, res, next) => {
 
-    const sessionStore = await new mysqlStore({
+    const sessionStore = new mysqlStore({
         host: 'localhost',
         user: 'root',
         password: '',
@@ -87,7 +87,8 @@ app.post('/login', (req: express.Request, res: express.Response) => {
 
 app.post('/register', (req: express.Request, res: express.Response) => {
     if (req.body.username && req.body.password) {
-        if (req.body.username.length < 5 || req.body.username.length > 16 || req.body.password.length < 6 || req.body.password.length > 16) {
+
+        if (req.body.username.indexOf('@') === -1 || req.body.username.indexOf('.') === -1 || req.body.username.length > 50 || req.body.password.length < 6 || req.body.password.length > 16) {
             return
         }
         const connect = new Connect()

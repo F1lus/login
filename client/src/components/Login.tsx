@@ -48,10 +48,10 @@ export default function Login() {
             {alert.length > 0 ? <div className='alert alert-danger'>{alert}</div> : null}
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <input type="text" name="username" value={username || ''} onChange={handleChange} autoComplete="off" required/>
+                    <input type="email" name="username" value={username || ''} onChange={handleChange} autoComplete="off" required/>
                     <label htmlFor="username" className="label-name">
                         <span className="content-name">
-                            Felhasználónév
+                            E-mail
                         </span>
                     </label>
                 </div>
